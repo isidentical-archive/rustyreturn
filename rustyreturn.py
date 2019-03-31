@@ -7,7 +7,7 @@ class RLR(ast.NodeTransformer):
     """Auto returns last statement of each function definition if 
     its last statement is a returnable expression"""
 
-    def _adjust(self, container: ast.AST, items: str = "body"):
+    def _adjust(self, container: ast.AST, items: str = "body") -> None:
         items = getattr(container, items) if items is not None else container
         last_stmt = items[-1]
 
