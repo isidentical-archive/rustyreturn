@@ -7,10 +7,21 @@ class RLR(ast.NodeTransformer):
     """Auto returns last statement of each function definition if 
     its last statement is a returnable expression"""
 
-    def visit_FunctionDef(self, fdef: ast.FunctionDef) -> ast.FunctionDef:
-        if isinstance(fdef.body[-1], ast.Expr):
-            fdef.body.append(ast.Return(value=fdef.body.pop().value))
-
+    def _adjust(self, container: ast.AST, items: str = "body"):
+        items = getattr(container, items) if items is not None else container
+        last_stmt = items[-1]
+        
+        if isinstance(last_stmt, ast.Expr):
+            items.append(ast.Return(value=items.pop().value))
+        elif isinstance(last_stmt, ast.If):
+            self._adjust(last_stmt)
+            if len(last_stmt.orelse) > 0:
+                self._adjust(last_stmt.orelse, None)
+        else:
+            return None
+            
+    def visit_FunctionDef(self, fdef: ast.FunctionDef) -> ast.FunctionDef:        
+        self._adjust(fdef)
         fdef.decorator_list = list(
             filter(lambda decorator: decorator.id != "rlr", fdef.decorator_list)
         )

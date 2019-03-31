@@ -8,7 +8,7 @@ with open(current_dir / "README.md", encoding="utf-8") as f:
     
 setup(
     name="RustyReturn",
-    version="0.1",
+    version="0.2",
     py_modules = ['rustyreturn'],
     url="https://github.com/abstractequalsmagic/RustyReturn",
     description = "Return last statement of functions.",
