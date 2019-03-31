@@ -10,7 +10,7 @@ class RLR(ast.NodeTransformer):
     def _adjust(self, container: ast.AST, items: str = "body"):
         items = getattr(container, items) if items is not None else container
         last_stmt = items[-1]
-        
+
         if isinstance(last_stmt, ast.Expr):
             items.append(ast.Return(value=items.pop().value))
         elif isinstance(last_stmt, ast.If):
@@ -19,8 +19,8 @@ class RLR(ast.NodeTransformer):
                 self._adjust(last_stmt.orelse, None)
         else:
             return None
-            
-    def visit_FunctionDef(self, fdef: ast.FunctionDef) -> ast.FunctionDef:        
+
+    def visit_FunctionDef(self, fdef: ast.FunctionDef) -> ast.FunctionDef:
         self._adjust(fdef)
         fdef.decorator_list = list(
             filter(lambda decorator: decorator.id != "rlr", fdef.decorator_list)
