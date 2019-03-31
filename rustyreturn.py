@@ -2,6 +2,7 @@ import ast
 import inspect
 from types import FunctionType
 
+
 class RLR(ast.NodeTransformer):
     """Auto returns last statement of each function definition if 
     its last statement is a returnable expression"""
